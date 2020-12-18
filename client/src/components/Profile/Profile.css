@@ -1,0 +1,65 @@
+.profile-page{
+    display: flex;
+    width: 90%;
+    margin: 5% auto;
+}
+.user-section{
+    flex: 40%;
+    margin: auto;
+}
+.rooms-section{
+    flex: 60%;
+}
+.profile-page-user-img{
+    height: 10rem;
+    width: 10rem;
+    margin: auto;
+}
+.profile-page-user-name{
+    margin: 5% auto;
+    font-size: 3rem;
+    font-weight: 800;
+    color: #e8ffff;
+    text-align: center;
+}
+
+.profile-user-buttons{
+    background-color: rgba(255,255,255,0.8);
+    width: 80%;
+    margin: 10% auto 5%;
+    text-align: center;
+    border-radius: 20px;
+}
+.rooms-section{
+    background-color: #759CF2;
+    width: 90%;
+    margin: auto;
+    padding: 2% 0;
+    border-radius: 20px;
+    box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+    color: #eee;
+    font-weight: 400 !important;
+}
+.rooms-heading{
+    font-weight: 800;
+    width: 90%;
+    margin: 2% auto;
+}
+.room-card{
+    width: 90%;
+    margin: 2% auto;
+    border-radius: 15px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 1%;
+}
+.room-card:hover{
+    cursor: pointer;
+    background-color: #5EB0EA;
+    box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px, rgba(240, 46, 170, 0.2) 15px 15px, rgba(240, 46, 170, 0.1) 20px 20px, rgba(240, 46, 170, 0.05) 25px 25px;
+}
+
+@media(max-width: 800px){
+    .profile-page{
+        flex-direction: column;
+    }
+}
