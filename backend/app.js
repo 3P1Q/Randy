@@ -2,11 +2,35 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// SETUP CORS
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // allow to server to accept request from different origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true // allow session cookie from browser to pass through
+  })
+);
+
+// CORS SETUP ENDS
+
+// SET UP SESSION
+app.use(session({
+  secret: "Randy, let's recreate the fun of interaction",
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+// SESSION SETUP COMPLETE
 
 // MONGO SETUP
 var MONGODB_URI = "";
@@ -15,7 +39,7 @@ if (process.env.NODE_ENV === 'production')
 else
   MONGODB_URI = "mongodb://localhost:27017/hacka-demic";
 
-  mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set("useCreateIndex", true);
 const connection = mongoose.connection;
 connection.once('open', () => {
@@ -23,14 +47,32 @@ connection.once('open', () => {
 });
 // MONGO SETUP DONE
 
+const User = require("./models/userModel");
+passport.use(User.createStrategy());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 // ROUTES CONFIG STARTS
 const indexRoute = require("./routes/index");
+const googleAuth = require("./routes/Auth/googleAuth");
+const githubAuth = require("./routes/Auth/githubAuth");
+const isLoggedIn = require("./middleware/isLoggedIn");
 // ROUTES CONFIG ENDS
 
 
 // APP CONFIG STARTS
 app.use("/api/",indexRoute);
+app.use("/api/auth/google",googleAuth);
+app.use("/api/auth/github",githubAuth);
+app.use("/api/loggedIn",isLoggedIn);
 // APP CONFIG ENDS
 
 const server = app.listen(port, function(){
