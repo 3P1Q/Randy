@@ -69,7 +69,6 @@ const githubAuth = require("./routes/Auth/githubAuth");
 const isLoggedIn = require("./middleware/isLoggedIn");
 const createRoom = require('./routes/Rooms/createRoom');
 const joinRoom = require('./routes/Rooms/joinRoom');
-const connectUser = require('./routes/Connect/connectUser');
 // ROUTES CONFIG ENDS
 
 
@@ -80,7 +79,6 @@ app.use("/api/auth/github",githubAuth);
 app.use("/api/loggedIn",isLoggedIn);
 app.use("/api/createroom", createRoom);
 app.use("/api/joinroom", joinRoom);
-app.use("/api/connectuser", connectUser);
 // APP CONFIG ENDS
 
 const server = app.listen(port, function(){
