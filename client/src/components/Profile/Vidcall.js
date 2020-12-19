@@ -1,4 +1,9 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
+import CallEndIcon from '@material-ui/icons/CallEnd';
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 // import './App.css';
 import io from "socket.io-client";
 import Peer from "simple-peer";
@@ -31,7 +36,13 @@ function Vidcall(props) {
   const [caller, setCaller] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
-  const [logUser] = useContext(logUserContext)
+  const [logUser] = useContext(logUserContext);
+
+  const [micOn, setMicOn] = useState(true);
+  const [vidOn, setVidOn] = useState(true);
+
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
 
   const userVideo = useRef();
   const partnerVideo = useRef();
@@ -56,6 +67,19 @@ function Vidcall(props) {
   },[socket])
 
   useEffect(()=>{
+    if(typeof stream !== 'undefined'){
+      stream.getVideoTracks()[0].enabled = !(stream.getVideoTracks()[0].enabled)
+    }
+    // console.log(stream);
+  },[vidOn])
+  useEffect(()=>{
+    if(typeof stream !== 'undefined'){
+      stream.getAudioTracks()[0].enabled = !(stream.getAudioTracks()[0].enabled)
+    }
+    // console.log(stream);
+  },[micOn])
+
+  useEffect(()=>{
     if(socket ==null) return;
     socket.on("yourID", (id) => {
           setYourID(id);
@@ -76,6 +100,15 @@ function Vidcall(props) {
       // {
         // acceptCall();
       // }
+    })
+
+    socket.on('timer', ({count}) => {
+      setSeconds(count%60);
+      setMinutes(Math.floor(count/60));
+
+      if(count === 0){
+        window.location.reload();
+      }
     })
   },[socket])
 
@@ -145,14 +178,14 @@ function Vidcall(props) {
   let UserVideo;
   if (stream) {
     UserVideo = (
-      <Video playsInline muted ref={userVideo} autoPlay />
+      <video playsInline className="user-video" muted ref={userVideo} autoPlay />
     );
   }
 
   let PartnerVideo;
   if (callAccepted) {
     PartnerVideo = (
-      <Video playsInline ref={partnerVideo} autoPlay />
+      <video className="partner-video" playsInline ref={partnerVideo} autoPlay />
     );
   }
 
@@ -175,26 +208,19 @@ function Vidcall(props) {
   }
 
   return (
-    // "h"
-    // <Container>
-    //   <Row>
-    //     {UserVideo}
-    //     {/* {PartnerVideo} */}
-    //   </Row>
-    //   <Row>
-    //     <p>your id: {yourID}</p>
-    //     {/* <button onClick={() => callPeer(randomUser())}>Call {randomUser()}</button> */}
-    //   </Row>
-    //   <Row>
-    //     {/* {incomingCall} */}
-    //   </Row>
-    // </Container>
     <div>
-      {`id: ${yourID}`}
-      {UserVideo}
-      {PartnerVideo}
-      {/* {incomingCall} */}
-      {/* <button onClick={() => callPeer(props.callTo)}>Call {props.callTo}</button> */}
+      <div style={minutes === 0 && seconds === 0 ? {display:"none"}:{}} className="timer">
+          <h1>{minutes} m {seconds} s</h1>
+      </div>
+      <div className="vid-containers">
+        {PartnerVideo}
+        {UserVideo}
+      </div>
+      <div className="call-buttons">
+          {!micOn?<MicOffIcon onClick={()=>setMicOn(!micOn)}/>:<MicIcon onClick={()=>setMicOn(!micOn)}/>}
+          {PartnerVideo?<CallEndIcon onClick={() => window.location.reload() }/>:""}
+          {!vidOn?<VideocamOffIcon onClick={()=>setVidOn(!vidOn)}/>:<VideocamIcon onClick={()=>setVidOn(!vidOn)}/>}
+      </div>
     </div>
     
   );

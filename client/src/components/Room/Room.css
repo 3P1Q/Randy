@@ -13,3 +13,38 @@
     max-width: 1000px;
     margin: 20vh auto;
 }
+
+.timer{
+    background-color: #759CF2;
+    color: #fff;
+    width: 30%;
+    margin: 2% auto;
+    padding: 0.5%;
+}
+
+.vid-containers{
+    padding-left: 13%;
+}
+.user-video{
+    height: 30%;
+    width: 30%;
+    border: 5px solid #03506f;
+    border-radius: 10px;
+    z-index: 5;
+    position: relative;
+    left: -8%;
+}
+.partner-video{
+    height: 60%;
+    width: 60%;
+    border : 5px solid #5B86E5;
+    border-radius: 10px;
+}
+.call-buttons svg{
+    font-size: 2.5rem;
+    margin: 0 5%;
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    padding: 0.5%
+}

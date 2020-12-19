@@ -123,6 +123,21 @@ io.on('connection', socket => {
             await io.to(user.user).emit('hey', {signal: data.signal, callFrom:data.callFrom});
             // await io.to(data.callFrom).emit('callAccepted', user.signal);
             activeUsers = activeUsers.filter((us) => (us.user!==user.user && us.user!==data.callFrom));
+
+            var count = 20;
+            // if(count>0)
+            // {
+              function timer(){
+                io.to(user.user).emit('timer', {count: count});
+                io.to(data.callFrom).emit('timer', {count: count});
+                count--;
+                if(count<0)
+                {
+                  clearInterval(intervalID);
+                }
+              }
+              var intervalID = setInterval(timer,1000);
+            // }
           }
         }
       }
