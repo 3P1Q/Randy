@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import {Link} from 'react-router-dom';
 
 import Picture from '../Picture/Picture';
 import JoinRoom from './JoinRoom';
@@ -29,11 +30,11 @@ const Profile = () => {
 
     function createRoomCard(room, index){
         return (
-            <div key={index} className="room-card">
+            <Link to={`/room/${room.roomid}`} ><div key={index} className="room-card">
                 <h2>{room.name}</h2>
                 <h3>ID : {room.roomid}</h3>
                 <h3 className="room-role">Role : {room.role}</h3>
-            </div>
+            </div></Link>
         )
     }
     return (
