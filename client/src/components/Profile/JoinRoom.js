@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,7 +7,25 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import axios from 'axios';
+import querystring from 'querystring';
+axios.defaults.withCredentials = true;
+
 const JoinRoom = (props) => {
+
+    const [addRoom, setAddRoom] = useState("");
+
+    const newRoomAdded = async () => {
+        const res = await axios.post("http://localhost:5000/api/joinroom", querystring.stringify({roomid: addRoom}));
+        const data = res.data;
+        console.log(data);
+        props.setLogUser((prev) => ({
+            ...prev,
+            rooms : [...prev.rooms, {name: data.name, roomid: data.roomid, role:"member"}]
+        }))
+        setAddRoom('');
+        props.setJoinOpen(false);
+    }
 
     const handleClose = () => {
         props.setJoinOpen(false);
@@ -28,13 +46,15 @@ const JoinRoom = (props) => {
                     label="Room ID"
                     type="text"
                     fullWidth
+                    value={addRoom}
+                    onChange={(e)=>setAddRoom(e.target.value)}
                 />
                 </DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={newRoomAdded} color="primary">
                     Join
                 </Button>
                 </DialogActions>

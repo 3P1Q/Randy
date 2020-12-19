@@ -21,7 +21,7 @@ import {logUserContext} from '../../App';
 import './Profile.css';
 
 const Profile = () => {
-    const [logUser] = useContext(logUserContext);
+    const [logUser, setLogUser] = useContext(logUserContext);
     const [joinOpen, setJoinOpen] = useState(false);
     const [createOpen, setCreateOpen] = useState(false);
     const data = logUser;
@@ -30,7 +30,7 @@ const Profile = () => {
         return (
             <div key={index} className="room-card">
                 <h2>{room.name}</h2>
-                <h3>ID : {room.id}</h3>
+                <h3>ID : {room.roomid}</h3>
                 <h3 className="room-role">Role : {room.role}</h3>
             </div>
         )
@@ -78,8 +78,8 @@ const Profile = () => {
                     {typeof data.rooms !== 'undefined' && data.rooms.map(createRoomCard)}
                 </div>
             </div>
-            <JoinRoom joinOpen={joinOpen} setJoinOpen={setJoinOpen}/>
-            <CreateRoom createOpen={createOpen} setCreateOpen={setCreateOpen}/>
+            <JoinRoom joinOpen={joinOpen} setJoinOpen={setJoinOpen} setLogUser={setLogUser}/>
+            <CreateRoom createOpen={createOpen} setCreateOpen={setCreateOpen} setLogUser={setLogUser}/>
         </div>
     )
 }

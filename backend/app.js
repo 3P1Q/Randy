@@ -9,6 +9,8 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+app.use(bodyParser.urlencoded({extended: true}));
+
 // SETUP CORS
 
 app.use(
@@ -65,6 +67,8 @@ const indexRoute = require("./routes/index");
 const googleAuth = require("./routes/Auth/googleAuth");
 const githubAuth = require("./routes/Auth/githubAuth");
 const isLoggedIn = require("./middleware/isLoggedIn");
+const createRoom = require('./routes/Rooms/createRoom');
+const joinRoom = require('./routes/Rooms/joinRoom');
 // ROUTES CONFIG ENDS
 
 
@@ -73,6 +77,8 @@ app.use("/api/",indexRoute);
 app.use("/api/auth/google",googleAuth);
 app.use("/api/auth/github",githubAuth);
 app.use("/api/loggedIn",isLoggedIn);
+app.use("/api/createroom", createRoom);
+app.use("/api/joinroom", joinRoom);
 // APP CONFIG ENDS
 
 const server = app.listen(port, function(){

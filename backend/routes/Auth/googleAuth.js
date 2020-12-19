@@ -13,7 +13,6 @@ passport.use(new GoogleStrategy({
     proxy: true
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
     User.findOrCreate({ googleId: profile.id}, function (err, user, created) {
       if(created===true){
         User.updateOne({ googleId: profile.id, },
