@@ -14,12 +14,13 @@ import LogOut from '@material-ui/icons/PowerSettingsNew';
 
 import {logUserContext} from '../../App';
 
-import data from './data';
+// import data from './data';
 
 import './Profile.css';
 
 const Profile = () => {
     const [logUser] = useContext(logUserContext);
+    const data = logUser
 
     function createRoomCard(room, index){
         return (

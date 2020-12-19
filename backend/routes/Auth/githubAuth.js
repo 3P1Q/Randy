@@ -43,7 +43,7 @@ router.get("/randy",
     console.log(req.user);
     res.send("Github Authentication Done");
     
-    // res.redirect(`http://localhost:3000/github/login/${req.user.username}`);
+    res.redirect(`http://localhost:3000/profile`);
   }
 );
 

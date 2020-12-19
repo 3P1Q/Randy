@@ -39,9 +39,8 @@ router.get("/randy",
   function(req, res) {
     // Successful authentication, redirect to secrets.
     console.log(req.user);
-    res.send("Google Authentication Done");
     
-    // res.redirect(`http://localhost:3000/google/login/${req.user.username}`);
+    res.redirect(`http://localhost:3000/profile`);
   }
 );
 
