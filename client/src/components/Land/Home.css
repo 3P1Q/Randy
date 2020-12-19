@@ -26,7 +26,10 @@
 .signin{
     flex: 50%;
 }
-
+a{
+    text-decoration: none;
+    color: inherit;
+}
 .o-auth-signin{
     width: 250px;
     margin: auto;

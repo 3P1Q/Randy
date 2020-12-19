@@ -14,16 +14,16 @@ const Home = () => {
             </div>
             <div className="signin-buttons">
                 <div className="signin">
-                    <div className="o-auth-signin google">
+                    <a href="/api/auth/google"><div className="o-auth-signin google">
                         <div className="signin-img"><img src="/images/search.svg" alt="google-logo"/></div>
                         <p className="o-auth-signin-text">Sign In With Google</p>
-                    </div>
+                    </div></a>
                 </div>
                 <div className="signin">
-                    <div className="o-auth-signin github">
+                <a href="/api/auth/github"><div href="/api/auth/github" className="o-auth-signin github">
                         <div className="signin-img"><GitHubIcon /></div>
                         <p className="o-auth-signin-text">Sign In With Github</p>
-                    </div>
+                    </div></a>
                 </div>
             </div>
         </div>
