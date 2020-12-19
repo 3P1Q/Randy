@@ -1,6 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import Picture from '../Picture/Picture';
+import JoinRoom from './JoinRoom';
+import CreateRoom from './CreateRoom';
 
 import {
     List,
@@ -8,29 +10,31 @@ import {
     ListItemText,
     ListItemIcon
 } from '@material-ui/core';
-import CreateRoom from '@material-ui/icons/Add';
-import JoinRoom from '@material-ui/icons/GroupAdd';
+import CreateRoomIcon from '@material-ui/icons/Add';
+import JoinRoomIcon from '@material-ui/icons/GroupAdd';
 import LogOut from '@material-ui/icons/PowerSettingsNew';
 
 import {logUserContext} from '../../App';
 
-import data from './data';
+// import data from './data';
 
 import './Profile.css';
 
 const Profile = () => {
-    const [logUser] = useContext(logUserContext);
+    const [logUser, setLogUser] = useContext(logUserContext);
+    const [joinOpen, setJoinOpen] = useState(false);
+    const [createOpen, setCreateOpen] = useState(false);
+    const data = logUser;
 
     function createRoomCard(room, index){
         return (
             <div key={index} className="room-card">
                 <h2>{room.name}</h2>
-                <h3>ID : {room.id}</h3>
+                <h3>ID : {room.roomid}</h3>
                 <h3 className="room-role">Role : {room.role}</h3>
             </div>
         )
     }
-    console.log(logUser);
     return (
         <div className="profile-page">
             <div className="user-section">
@@ -49,15 +53,15 @@ const Profile = () => {
                     >
                         <ListItem button>
                             <ListItemIcon>
-                                <CreateRoom />
+                                <CreateRoomIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Create a new Room" />
+                            <ListItemText primary="Create a new Room" onClick={()=>setCreateOpen(true)}/>
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
-                                <JoinRoom />
+                                <JoinRoomIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Join a new Room" />
+                            <ListItemText primary="Join a new Room" onClick={()=>setJoinOpen(true)}/>
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
@@ -71,9 +75,11 @@ const Profile = () => {
             <div className="rooms-section">
                 <h2 className="rooms-heading">Enter a Room</h2>
                 <div className="rooms">
-                    {data.rooms.map(createRoomCard)}
+                    {typeof data.rooms !== 'undefined' && data.rooms.map(createRoomCard)}
                 </div>
             </div>
+            <JoinRoom joinOpen={joinOpen} setJoinOpen={setJoinOpen} setLogUser={setLogUser}/>
+            <CreateRoom createOpen={createOpen} setCreateOpen={setCreateOpen} setLogUser={setLogUser}/>
         </div>
     )
 }

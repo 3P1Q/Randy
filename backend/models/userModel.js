@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     googleId: String,
     githubId: String,
     profilePic: String,
-    rooms: [{id: String, role: String}]
+    rooms: [{roomid: String, name:String, role: String}]
 });
 
 userSchema.plugin(passportLocalMongoose);

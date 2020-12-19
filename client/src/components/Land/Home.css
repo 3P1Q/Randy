@@ -1,7 +1,7 @@
 .landing{
     width: 80%;
     max-width: 1000px;
-    margin: 20vh auto;
+    margin: 20vh auto 10vh;
     text-align: center;
     padding: 2% 5%;
     background-color: rgba(255,255,255,0.5);
@@ -16,4 +16,55 @@
 .home-phrase-p{
     font-size: 1.25rem;
     margin: 5% 0;
+}
+
+.signin-buttons{
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
+.signin{
+    flex: 50%;
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.o-auth-signin{
+    width: 250px;
+    margin: auto;
+    font-size: 1.25rem;
+    vertical-align: middle;
+    text-align: center;
+    background-color: #F5F5F5;
+    padding: 1%;
+    display: flex;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 200ms ease 0s;
+}
+.o-auth-signin.github{
+    background-color: black;
+    color: #fff;
+}
+.o-auth-signin:hover{
+    box-shadow: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
+    user-select: none;
+}
+.signin-img{
+    display: inline-block;
+    width: 1.5rem;
+    margin: auto;
+}
+.o-auth-signin-text{
+    margin: 0 2% auto;
+}
+
+@media(max-width: 700px){
+    .signin-buttons{
+        flex-direction: column;
+    }
+    .o-auth-signin{
+        margin: 5% auto;
+    }
 }

@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const User = require("../models/userModel");
+
 router.get("/", (req, res) => {
     res.send("Welcome to isLoggedIn");
 });
@@ -8,11 +10,11 @@ router.get("/", (req, res) => {
 router.post("/", (req,res) => {
    if(req.user)
    {
-       res.send("true")
+       res.send(req.user);
    }
    else
    {
-       res.send("false")
+       res.send({loggedin: false});
    }
 });
 

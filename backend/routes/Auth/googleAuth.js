@@ -13,7 +13,6 @@ passport.use(new GoogleStrategy({
     proxy: true
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(profile);
     User.findOrCreate({ googleId: profile.id}, function (err, user, created) {
       if(created===true){
         User.updateOne({ googleId: profile.id, },
@@ -38,10 +37,7 @@ router.get("/randy",
   passport.authenticate('google', { failureRedirect: "/login" }),
   function(req, res) {
     // Successful authentication, redirect to secrets.
-    console.log(req.user);
-    res.send("Google Authentication Done");
-    
-    // res.redirect(`http://localhost:3000/google/login/${req.user.username}`);
+    res.redirect(`http://localhost:3000/profile`);
   }
 );
 
