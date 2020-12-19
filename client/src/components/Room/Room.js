@@ -37,7 +37,7 @@ const Room = (props) => {
     async function connectRequested(){
         // const res = await axios.post("/api/connectuser", querystring.stringify({roomid: roomid}));
         // console.log(res.data);
-        setCallTo("hello")
+        setCallTo("connected")
     }
     
     console.log(roomid);
@@ -50,15 +50,15 @@ const Room = (props) => {
             <div className='call-screen'>
                 <Vidcall callTo={callTo}/>
             </div>
-            <div className="connect-option">
+            {callTo!=='connected'?<div className="connect-option">
                 <h1>When you are ready to connect, click below :)</h1>
                 <Button variant="contained" color="secondary" onClick={connectRequested}>
                     CONNECT
                 </Button>
-                <Button variant="contained" color="primary">
+                {/* <Button variant="contained" color="primary">
                     CANCEL
-                </Button>
-            </div>
+                </Button> */}
+            </div>:""}
         </div>
     )
 }
