@@ -38,8 +38,6 @@ router.get("/randy",
   passport.authenticate('google', { failureRedirect: "/login" }),
   function(req, res) {
     // Successful authentication, redirect to secrets.
-    console.log(req.user);
-    
     res.redirect(`http://localhost:3000/profile`);
   }
 );

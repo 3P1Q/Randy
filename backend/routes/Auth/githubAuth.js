@@ -40,9 +40,6 @@ router.get("/randy",
   passport.authenticate('github', { failureRedirect: "/login" }),
   function(req, res) {
     // Successful authentication, redirect to secrets.
-    console.log(req.user);
-    res.send("Github Authentication Done");
-    
     res.redirect(`http://localhost:3000/profile`);
   }
 );
