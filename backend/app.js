@@ -84,3 +84,73 @@ app.use("/api/joinroom", joinRoom);
 const server = app.listen(port, function(){
     console.log(`Server started locally at port ${port}`);
 });
+
+// const http = require("http");
+// const server = http.createServer(app);
+const socket = require("socket.io");
+const io = socket(server, {cors:{origin:'*'}});
+
+const users = {};
+
+var activeUsers = [];
+
+io.on('connection', socket => {
+    const username = socket.handshake.query.username;
+    console.log(username);
+    socket.join(username)
+    console.log("Connected to socket");
+    if (!users[username]) {
+        users[username] = username;
+    }
+    socket.emit("yourID", username);
+    io.sockets.emit("allUsers", users);
+    socket.on('disconnect', () => {
+        delete users[username];
+    })
+
+    socket.on("callUser", (data) => {
+        io.to(data.userToCall).emit('hey', {signal: data.signal, callFrom: data.callFrom});
+    })
+
+    var intervalID = null;
+    socket.on("connectNow", async (data) => {
+      activeUsers.push({user: data.callFrom, signal:data.signal});
+      
+      if(activeUsers.length>1)
+      {
+        for(let user of activeUsers)
+        {
+          if(user.user !== data.callFrom){
+            await io.to(user.user).emit('hey', {signal: data.signal, callFrom:data.callFrom});
+            // await io.to(data.callFrom).emit('callAccepted', user.signal);
+            activeUsers = activeUsers.filter((us) => (us.user!==user.user && us.user!==data.callFrom));
+
+            var count = 20;
+            // if(count>0)
+            // {
+              function timer(){
+                io.to(user.user).emit('timer', {count: count});
+                io.to(data.callFrom).emit('timer', {count: count});
+                count--;
+                if(count<0)
+                {
+                  clearInterval(intervalID);
+                }
+              }
+              intervalID = setInterval(timer,1000);
+            // }
+          }
+        }
+      }
+      console.log(activeUsers);
+    })
+
+    socket.on("acceptCall", (data) => {
+        io.to(data.to).emit('callAccepted', data.signal);
+    })
+
+    socket.on('disconnect-user', ({user}) => {
+      activeUsers = activeUsers.filter((us) => (us.user!==user));
+      clearInterval(intervalID);
+    })
+});
