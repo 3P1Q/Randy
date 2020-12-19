@@ -39,7 +39,7 @@ function Vidcall(props) {
   const [socket,setSocket] = useState();
 
   useEffect(()=>{
-    const newSocket = io("http://localhost:5000", { query: {username:  logUser.username } });
+    const newSocket = io("", { query: {username:  logUser.username } });
 
     setSocket(newSocket);
 

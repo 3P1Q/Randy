@@ -5,21 +5,35 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
+const path = require('path')
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.urlencoded({extended: true}));
 
-// SETUP CORS
-
-app.use(
-  cors({
-    origin: "http://localhost:3000", // allow to server to accept request from different origin
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true // allow session cookie from browser to pass through
+if(process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.header('x-forwarded-proto') !== 'https')
+      res.redirect(`https://${req.header('host')}${req.url}`)
+    else
+      next()
   })
-);
+}
+
+// SETUP CORS
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static(path.join(__dirname, "../client/build")));
+}
+else{
+  app.use(
+    cors({
+      origin: "http://localhost:3000", // allow to server to accept request from different origin
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true // allow session cookie from browser to pass through
+    })
+  );
+}
 
 // CORS SETUP ENDS
 
@@ -37,7 +51,7 @@ app.use(passport.session());
 // MONGO SETUP
 var MONGODB_URI = "";
 if (process.env.NODE_ENV === 'production')
-  MONGODB_URI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qvaqf.mongodb.net/Hackanect?retryWrites=true&w=majority`;
+  MONGODB_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.qky0k.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 else
   MONGODB_URI = "mongodb://localhost:27017/hacka-demic";
 
@@ -84,6 +98,14 @@ app.use("/api/joinroom", joinRoom);
 const server = app.listen(port, function(){
     console.log(`Server started locally at port ${port}`);
 });
+
+if(process.env.NODE_ENV === 'production')
+{
+  app.get("*", (req, res) => { 
+    res.sendFile(path.join(__dirname , "../client/build/index.html"));
+    });
+}
+
 
 // const http = require("http");
 // const server = http.createServer(app);
