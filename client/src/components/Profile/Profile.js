@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import Picture from '../Picture/Picture';
 import JoinRoom from './JoinRoom';
 import CreateRoom from './CreateRoom';
+import Vidcall from './Vidcall';
 
 import {
     List,
@@ -80,6 +81,8 @@ const Profile = () => {
             </div>
             <JoinRoom joinOpen={joinOpen} setJoinOpen={setJoinOpen} setLogUser={setLogUser}/>
             <CreateRoom createOpen={createOpen} setCreateOpen={setCreateOpen} setLogUser={setLogUser}/>
+
+            <Vidcall />
         </div>
     )
 }

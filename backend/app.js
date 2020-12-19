@@ -84,3 +84,32 @@ app.use("/api/joinroom", joinRoom);
 const server = app.listen(port, function(){
     console.log(`Server started locally at port ${port}`);
 });
+
+// const http = require("http");
+// const server = http.createServer(app);
+const socket = require("socket.io");
+const io = socket(server);
+
+const users = {};
+
+io.on('connection', socket => {
+    const username = socket.handshake.query._id
+    socket.join(username)
+    console.log("socket connect ho rha hai kya?")
+    if (!users[username]) {
+        users[username] = username;
+    }
+    socket.emit("yourID", username);
+    io.sockets.emit("allUsers", users);
+    socket.on('disconnect', () => {
+        delete users[username];
+    })
+
+    socket.on("callUser", (data) => {
+        io.to(data.userToCall).emit('hey', {signal: data.signalData, callFrom: data.from});
+    })
+
+    socket.on("acceptCall", (data) => {
+        io.to(data.to).emit('callAccepted', data.signal);
+    })
+});
