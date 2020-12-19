@@ -14,7 +14,6 @@ passport.use(new GitHubStrategy({
     proxy: true,
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
     User.findOrCreate({ githubId: profile.id, }, function (err, user,created) {
       
     //   console.log(user);

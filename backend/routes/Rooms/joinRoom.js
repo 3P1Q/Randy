@@ -11,7 +11,7 @@ router.post("/", (req,res)=>{
     if(req.user)
     {
         var name="";
-        Room.updateOne({roomid: roomid}, {$push: {users : {user: user, role:"member"} } }, (err, _)=>{
+        Room.updateOne({roomid: roomid}, {$push: {users : {user: req.user.username, role:"member", active:false} } }, (err, _)=>{
             if(err) console.log(err)
         });
         Room.findOne({roomid: roomid},(err, room)=>{

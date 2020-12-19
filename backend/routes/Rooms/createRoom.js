@@ -12,7 +12,7 @@ router.post("/", (req,res)=>{
         const newRoom = new Room({
             roomid: roomid,
             name: name,
-            users: [{user: req.user._id, role:"admin"}]
+            users: [{user: req.user.username, role:"admin", active:false}]
         });
         newRoom.save();
          User.updateOne({_id: req.user.id} , {$push:{rooms: {roomid:req.body.roomid, name: req.body.name, role: "admin"}}}, (err, user)=>{

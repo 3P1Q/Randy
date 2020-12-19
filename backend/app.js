@@ -69,6 +69,7 @@ const githubAuth = require("./routes/Auth/githubAuth");
 const isLoggedIn = require("./middleware/isLoggedIn");
 const createRoom = require('./routes/Rooms/createRoom');
 const joinRoom = require('./routes/Rooms/joinRoom');
+const connectUser = require('./routes/Connect/connectUser');
 // ROUTES CONFIG ENDS
 
 
@@ -79,6 +80,7 @@ app.use("/api/auth/github",githubAuth);
 app.use("/api/loggedIn",isLoggedIn);
 app.use("/api/createroom", createRoom);
 app.use("/api/joinroom", joinRoom);
+app.use("/api/connectuser", connectUser);
 // APP CONFIG ENDS
 
 const server = app.listen(port, function(){
@@ -91,6 +93,8 @@ const socket = require("socket.io");
 const io = socket(server, {cors:{origin:'*'}});
 
 const users = {};
+
+var activeUsers = [];
 
 io.on('connection', socket => {
     const username = socket.handshake.query.username;
@@ -108,6 +112,23 @@ io.on('connection', socket => {
 
     socket.on("callUser", (data) => {
         io.to(data.userToCall).emit('hey', {signal: data.signal, callFrom: data.callFrom});
+    })
+
+    socket.on("connectNow", async (data) => {
+      activeUsers.push({user: data.callFrom, signal:data.signal});
+      
+      if(activeUsers.length>1)
+      {
+        for(let user of activeUsers)
+        {
+          if(user.user !== data.callFrom){
+            await io.to(user.user).emit('hey', {signal: data.signal, callFrom:data.callFrom});
+            // await io.to(data.callFrom).emit('callAccepted', user.signal);
+            activeUsers = activeUsers.filter((us) => (us.user!==user.user && us.user!==data.callFrom));
+          }
+        }
+      }
+      console.log(activeUsers);
     })
 
     socket.on("acceptCall", (data) => {

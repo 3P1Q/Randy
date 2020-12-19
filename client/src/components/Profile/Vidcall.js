@@ -23,7 +23,7 @@ const Video = styled.video`
   height: 50%;
 `;
 
-function Vidcall() {
+function Vidcall(props) {
   const [yourID, setYourID] = useState("");
   const [users, setUsers] = useState({});
   const [stream, setStream] = useState();
@@ -68,14 +68,34 @@ function Vidcall() {
     socket.on("hey", (data) => {
       console.log("hy");
       console.log(data);
-      setReceivingCall(true)
       setCaller(data.callFrom)
       setCallerSignal(data.signal)
+      setReceivingCall(true)
+      socket.off('callAccepted')
+      // if(receivingCall)
+      // {
+        // acceptCall();
+      // }
     })
   },[socket])
 
-  function callPeer(id) {
-    console.log(id);
+  useEffect(()=>{
+    if(receivingCall)
+      {
+        acceptCall();
+      }
+  },[receivingCall])
+
+  useEffect(()=>{
+    if(props.callTo !== "" || props.callTo!==null)
+    {
+      callPeer();
+    }
+  },[props.callTo])
+
+  function callPeer() {
+    if(socket == null)  return;
+    // console.log(id);
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -84,7 +104,8 @@ function Vidcall() {
 
     peer.on("signal", data => {
       console.log(data);
-      socket.emit("callUser", {userToCall: id, signal: data, callFrom: yourID })
+      // socket.emit("callUser", {userToCall: id, signal: data, callFrom: yourID })
+      socket.emit("connectNow", {signal: data, callFrom: yourID })
     })
 
     peer.on("stream", stream => {
@@ -94,6 +115,7 @@ function Vidcall() {
     })
 
     socket.on("callAccepted", signal => {
+      console.log(signal);
       console.log(signal);
       setCallAccepted(true)
       peer.signal(signal)
@@ -171,8 +193,8 @@ function Vidcall() {
       {`id: ${yourID}`}
       {UserVideo}
       {PartnerVideo}
-      {incomingCall}
-      <button onClick={() => callPeer(randomUser())}>Call {randomUser()}</button>
+      {/* {incomingCall} */}
+      {/* <button onClick={() => callPeer(props.callTo)}>Call {props.callTo}</button> */}
     </div>
     
   );
