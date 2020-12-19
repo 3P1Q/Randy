@@ -51,7 +51,7 @@ app.use(passport.session());
 // MONGO SETUP
 var MONGODB_URI = "";
 if (process.env.NODE_ENV === 'production')
-  MONGODB_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.qky0k.mongodb.net/<dbname>?retryWrites=true&w=majority`;
+  MONGODB_URI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.qky0k.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 else
   MONGODB_URI = "mongodb://localhost:27017/hacka-demic";
 
