@@ -88,14 +88,15 @@ const server = app.listen(port, function(){
 // const http = require("http");
 // const server = http.createServer(app);
 const socket = require("socket.io");
-const io = socket(server);
+const io = socket(server, {cors:{origin:'*'}});
 
 const users = {};
 
 io.on('connection', socket => {
-    const username = socket.handshake.query._id
+    const username = socket.handshake.query.username;
+    console.log(username);
     socket.join(username)
-    console.log("socket connect ho rha hai kya?")
+    console.log("Connected to socket");
     if (!users[username]) {
         users[username] = username;
     }
@@ -106,7 +107,7 @@ io.on('connection', socket => {
     })
 
     socket.on("callUser", (data) => {
-        io.to(data.userToCall).emit('hey', {signal: data.signalData, callFrom: data.from});
+        io.to(data.userToCall).emit('hey', {signal: data.signal, callFrom: data.callFrom});
     })
 
     socket.on("acceptCall", (data) => {

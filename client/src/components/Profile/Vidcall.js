@@ -35,32 +35,47 @@ function Vidcall() {
 
   const userVideo = useRef();
   const partnerVideo = useRef();
-  const socket = useRef();
+  // const socket = useRef();
+  const [socket,setSocket] = useState();
 
-  useEffect(() => {
-    socket.current = io.connect("/", {query: {_id: logUser._id}});
+  useEffect(()=>{
+    const newSocket = io("http://localhost:5000", { query: {username:  logUser.username } });
+
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  },[logUser])
+
+  useEffect(()=>{
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-      setStream(stream);
-      if (userVideo.current) {
-        userVideo.current.srcObject = stream;
-      }
-    })
+          setStream(stream);
+          if (userVideo.current) {
+            userVideo.current.srcObject = stream;
+          }
+        })
+  },[socket])
 
-    socket.current.on("yourID", (id) => {
-      setYourID(id);
-    })
-    socket.current.on("allUsers", (users) => {
+  useEffect(()=>{
+    if(socket ==null) return;
+    socket.on("yourID", (id) => {
+          setYourID(id);
+        })
+    
+    socket.on("allUsers", (users) => {
       setUsers(users);
     })
 
-    socket.current.on("hey", (data) => {
+    socket.on("hey", (data) => {
+      console.log("hy");
+      console.log(data);
       setReceivingCall(true)
       setCaller(data.callFrom)
       setCallerSignal(data.signal)
     })
-  }, []);
+  },[socket])
 
   function callPeer(id) {
+    console.log(id);
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -68,7 +83,8 @@ function Vidcall() {
     })
 
     peer.on("signal", data => {
-      socket.current.emit("callUser", {userToCall: id, signal: data, callFrom: yourID })
+      console.log(data);
+      socket.emit("callUser", {userToCall: id, signal: data, callFrom: yourID })
     })
 
     peer.on("stream", stream => {
@@ -77,7 +93,8 @@ function Vidcall() {
       }
     })
 
-    socket.current.on("callAccepted", signal => {
+    socket.on("callAccepted", signal => {
+      console.log(signal);
       setCallAccepted(true)
       peer.signal(signal)
     })
@@ -92,7 +109,7 @@ function Vidcall() {
     })
 
     peer.on("signal", data => {
-      socket.current.emit("acceptCall", {signal: data, to: caller } )
+      socket.emit("acceptCall", {signal: data, to: caller } )
     })
 
     peer.on("stream", stream => {
@@ -102,20 +119,6 @@ function Vidcall() {
     peer.signal(callerSignal)
   }
 
-  function randomUser(){
-    const keys = Object.keys(users)
-    console.log("keys: ", keys)
-    console.log("num users: ", keys.length)
-    let idx = Math.floor(Math.random()*keys.length)
-    // let idx = 1
-    console.log("index: ", idx)
-    while(keys[idx] === yourID){
-      idx = Math.floor(Math.random() * keys.length)
-    }
-    console.log("yourid: ", yourID)
-    console.log("connectid: ", keys[idx])
-    return keys[idx]
-  }
 
   let UserVideo;
   if (stream) {
@@ -140,21 +143,40 @@ function Vidcall() {
       </div>
     )
   }
+
+  function randomUser(){
+    if(logUser.username === "2802harsh@gmail.com")
+      return "2802harsh"
+    
+      else
+        return null;
+  }
+
   return (
-    <Container>
-      <Row>
-        {UserVideo}
-        {PartnerVideo}
-      </Row>
-      <Row>
-        <p>your id: {yourID}</p>
-        <button onClick={() => callPeer(randomUser())}>Call {randomUser()}</button>
-      </Row>
-      <Row>
-        {incomingCall}
-      </Row>
-    </Container>
+    // "h"
+    // <Container>
+    //   <Row>
+    //     {UserVideo}
+    //     {/* {PartnerVideo} */}
+    //   </Row>
+    //   <Row>
+    //     <p>your id: {yourID}</p>
+    //     {/* <button onClick={() => callPeer(randomUser())}>Call {randomUser()}</button> */}
+    //   </Row>
+    //   <Row>
+    //     {/* {incomingCall} */}
+    //   </Row>
+    // </Container>
+    <div>
+      {`id: ${yourID}`}
+      {UserVideo}
+      {PartnerVideo}
+      {incomingCall}
+      <button onClick={() => callPeer(randomUser())}>Call {randomUser()}</button>
+    </div>
+    
   );
+  // return("hye")
 }
 
 export default Vidcall;
