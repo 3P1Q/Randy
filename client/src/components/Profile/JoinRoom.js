@@ -16,7 +16,7 @@ const JoinRoom = (props) => {
     const [addRoom, setAddRoom] = useState("");
 
     const newRoomAdded = async () => {
-        const res = await axios.post("http://localhost:5000/api/joinroom", querystring.stringify({roomid: addRoom}));
+        const res = await axios.post("/api/joinroom", querystring.stringify({roomid: addRoom}));
         const data = res.data;
         console.log(data);
         props.setLogUser((prev) => ({

@@ -21,7 +21,7 @@ const CreateRoom = (props) => {
     const newRoomCreated = async () => {
         const id = uuid();
         console.log(id);
-        const res = await axios.post("http://localhost:5000/api/createroom", querystring.stringify({roomid: id, name: newRoom}));
+        const res = await axios.post("/api/createroom", querystring.stringify({roomid: id, name: newRoom}));
         const data = res.data;
         props.setLogUser((prev) => ({
             ...prev,
