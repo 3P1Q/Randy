@@ -112,6 +112,7 @@ io.on('connection', socket => {
         io.to(data.userToCall).emit('hey', {signal: data.signal, callFrom: data.callFrom});
     })
 
+    var intervalID = null;
     socket.on("connectNow", async (data) => {
       activeUsers.push({user: data.callFrom, signal:data.signal});
       
@@ -136,7 +137,7 @@ io.on('connection', socket => {
                   clearInterval(intervalID);
                 }
               }
-              var intervalID = setInterval(timer,1000);
+              intervalID = setInterval(timer,1000);
             // }
           }
         }
@@ -146,5 +147,10 @@ io.on('connection', socket => {
 
     socket.on("acceptCall", (data) => {
         io.to(data.to).emit('callAccepted', data.signal);
+    })
+
+    socket.on('disconnect-user', ({user}) => {
+      activeUsers = activeUsers.filter((us) => (us.user!==user));
+      clearInterval(intervalID);
     })
 });

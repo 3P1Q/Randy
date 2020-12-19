@@ -67,6 +67,11 @@ function Vidcall(props) {
   },[socket])
 
   useEffect(()=>{
+    if(socket == null) return;
+    socket.emit('disconnect-user',{user: logUser.username});
+  },[socket])
+
+  useEffect(()=>{
     if(typeof stream !== 'undefined'){
       stream.getVideoTracks()[0].enabled = !(stream.getVideoTracks()[0].enabled)
     }
