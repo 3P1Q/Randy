@@ -10,6 +10,7 @@ import axios from 'axios';
 import Navbar from './components/Navbar';
 import Home from './components/Land/Home';
 import Profile from './components/Profile/Profile';
+import Room from './components/Room/Room';
 
 import './App.css';
 
@@ -44,6 +45,11 @@ function App() {
           <Route path="/profile" >
             <Profile />
           </Route>
+
+          <Route path="/room/:roomid" render={(props) => (
+            <Room routerProps={props} />
+          )}
+          />
 
         </Switch>
       </Router>

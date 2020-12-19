@@ -82,7 +82,7 @@ const Profile = () => {
             <JoinRoom joinOpen={joinOpen} setJoinOpen={setJoinOpen} setLogUser={setLogUser}/>
             <CreateRoom createOpen={createOpen} setCreateOpen={setCreateOpen} setLogUser={setLogUser}/>
 
-            <Vidcall />
+            {/* <Vidcall /> */}
         </div>
     )
 }
